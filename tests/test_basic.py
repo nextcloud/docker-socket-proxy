@@ -62,3 +62,15 @@ def test_autoban_invalid_url():
             client.get("_unknown")
     print("Autoban, invalid url:", i + 1)
     misc.initialize_container()
+
+
+# test should be run last
+def test_non_standard_port():
+    misc.remove_haproxy()
+    try:
+        misc.start_haproxy(port=12375)
+        misc.wait_heartbeat()
+        r = httpx.get("http://localhost:12375/_ping", auth=("app_api_haproxy_user", "some_secure_password"))
+        assert r.status_code == 200
+    finally:
+        misc.remove_haproxy()

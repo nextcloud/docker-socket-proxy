@@ -2,11 +2,14 @@ from subprocess import run, DEVNULL
 import time
 
 
-def restart_haproxy():
+def remove_haproxy():
     run("docker container rm aa-docker-socket-proxy --force".split(), stderr=DEVNULL, stdout=DEVNULL, check=False)
-    run("docker run -e NC_HAPROXY_PASSWORD='some_secure_password' "
+
+
+def start_haproxy(port: int = 2375):
+    run(f"docker run -e NC_HAPROXY_PASSWORD='some_secure_password' -e HAPROXY_PORT={port} "
         "-v /var/run/docker.sock:/var/run/docker.sock "
-        "--name aa-docker-socket-proxy -h aa-docker-socket-proxy -p 2375:2375 "
+        f"--name aa-docker-socket-proxy -h aa-docker-socket-proxy -p {port}:{port} "
         "--rm --privileged -d ghcr.io/cloud-py-api/aa-docker-socket-proxy:latest".split(),
         stdout=DEVNULL,
         check=True)
@@ -25,5 +28,6 @@ def wait_heartbeat():
 
 
 def initialize_container():
-    restart_haproxy()
+    remove_haproxy()
+    start_haproxy()
     wait_heartbeat()
