@@ -52,6 +52,7 @@ jobs:
           file: Dockerfile
           tags: |
             ghcr.io/cloud-py-api/aa-docker-socket-proxy:${{ github.sha }}
+          load: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
