@@ -1,5 +1,6 @@
 from subprocess import run, DEVNULL
 import time
+from os import environ
 
 
 def remove_haproxy():
@@ -7,10 +8,11 @@ def remove_haproxy():
 
 
 def start_haproxy(port: int = 2375):
+    tag = environ.get("TAG_SUFFIX", "latest")
     run(f"docker run -e NC_HAPROXY_PASSWORD='some_secure_password' -e HAPROXY_PORT={port} "
         "-v /var/run/docker.sock:/var/run/docker.sock "
         f"--name aa-docker-socket-proxy -h aa-docker-socket-proxy -p {port}:{port} "
-        "--rm --privileged -d ghcr.io/cloud-py-api/aa-docker-socket-proxy:latest".split(),
+        f"--rm --privileged -d aa-docker-socket-proxy:{tag}".split(),
         stdout=DEVNULL,
         check=True)
 
