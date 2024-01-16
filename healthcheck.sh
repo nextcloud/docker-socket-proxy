@@ -1,3 +1,3 @@
 #!/bin/bash
 
-nc -z localhost 2375 || exit 1
+nc -z localhost "$HAPROXY_PORT" || exit 1
