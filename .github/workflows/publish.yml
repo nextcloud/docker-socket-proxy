@@ -48,7 +48,7 @@ jobs:
         with:
           push: false
           context: .
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           file: Dockerfile
           tags: |
             ghcr.io/cloud-py-api/aa-docker-socket-proxy:${{ github.sha }}
