@@ -20,4 +20,4 @@ COPY --chmod=664 haproxy.cfg /haproxy.cfg
 
 WORKDIR /
 ENTRYPOINT ["/bin/bash", "start.sh"]
-HEALTHCHECK CMD /healthcheck.sh
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD /healthcheck.sh

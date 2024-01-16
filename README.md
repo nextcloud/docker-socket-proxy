@@ -49,7 +49,7 @@ You can specify `HAPROXY_PORT` during container creation to use custom port inst
 To build image locally use:
 
 ```shell
-docker build -f ./Dockerfile -t aa-docker-socket-proxy:latest -f ./Dockerfile ./
+docker build -f ./Dockerfile -t aa-docker-socket-proxy:latest ./
 ```
 
 Deploy image(for `nextcloud-docker-dev`):
