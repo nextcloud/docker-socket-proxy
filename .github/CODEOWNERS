@@ -1,0 +1,4 @@
+/haproxy.cfg		@andrey18106 @bigcat88
+/start.sh 			@andrey18106 @bigcat88
+/healthcheck.sh 	@andrey18106 @bigcat88
+/Dockerfile.sh 		@andrey18106 @bigcat88
