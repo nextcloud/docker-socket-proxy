@@ -6,43 +6,53 @@ It comes with built-in authentication and strict bruteforce protection.
 
 The rules specifying which docker APIs are allowed for AppAPI are the same as in [Nextcloud AIO](https://github.com/nextcloud/all-in-one/tree/main/Containers/docker-socket-proxy).
 
-For the optimal use of AppAPI in conjunction with Docker, the following approach is highly recommended for all scenarios.
+## When to use
 
-For those utilizing **Nextcloud AIO**, it's advised to employ the standard Nextcloud AIO Docker Socket proxy.
+We highly recommend to use it **in all cases**, except for **Nextcloud AIO**, in that case use the standard Nextcloud AIO Docker Socket proxy.
+
+> [!IMPORTANT]
+> It is very important to understand that if you install ExApps on a remote daemon on an untrusted network,
+> you should always use this docker socket proxy with TLS.
 
 ## How to use
 
 ### Docker in trusted network
 
 ```shell
-docker run -e NC_HAPROXY_PASSWORD="some_secure_password" -v /var/run/docker.sock:/var/run/docker.sock \
-  --name aa-docker-socket-proxy -h aa-docker-socket-proxy --rm --privileged -d ghcr.io/cloud-py-api/aa-docker-socket-proxy:release
+docker run -e NC_HAPROXY_PASSWORD="some_secure_password" \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  --name aa-docker-socket-proxy -h aa-docker-socket-proxy \
+  --restart unless-stopped --privileged -d ghcr.io/cloud-py-api/aa-docker-socket-proxy:release
 ```
 
 Instead of `some_secure_password` you put your password that later you should provide to AppAPI during Daemon creation.
 
-### Docker with SSL
+### Docker with TLS
 
 ```shell
-docker run -e NC_HAPROXY_PASSWORD="some_secure_password" -v /var/run/docker.sock:/var/run/docker.sock \
+docker run -e NC_HAPROXY_PASSWORD="some_secure_password" \
+  -v /var/run/docker.sock:/var/run/docker.sock \
   -v `pwd`/certs/cert.pem:/certs/cert.pem \
-  --name aa-docker-socket-proxy -h aa-docker-socket-proxy --rm --privileged -d ghcr.io/cloud-py-api/aa-docker-socket-proxy:release
+  --name aa-docker-socket-proxy -h aa-docker-socket-proxy \
+  --restart unless-stopped --privileged -d ghcr.io/cloud-py-api/aa-docker-socket-proxy:release
 ```
 
-Here in addition to `some_secure_password` you should map certificate file from host with SSL certificates that will be used by HaProxy and ExApps.
+Here in addition to `some_secure_password` we map certificate file from host with SSL certificate that will be used by HaProxy.
 
 > [!WARNING]
 > If the certificates are self-signed, your job is to add them to the Nextcloud instance so that AppAPI can recognize them.
 
 ### AppAPI
 
-1. Create a Docker Deploy Daemon in AppAPI with the button: `Docker Socket Proxy`
+1. Create a daemon from the `Docker Socket Proxy` or `Docker Socket Proxy Remote` template in AppAPI.
 2. Fill the password you used during container creation.
-3. In cases when DockerSocketProxy is on a remote server, you also will be asked for the IP/DNS of the created HaProxy.
+3. If `Docker Socket Proxy Remote` is used you need to specify the IP/DNS of the created HaProxy.
 
 ### Additionally supported variables
 
-You can specify `HAPROXY_PORT` during container creation to use custom port instead of 2735 which is the default one.
+`HAPROXY_PORT`: using of custom port instead of 2735 which is the default one.
+
+`EX_APPS_NET`: only for custom remote ExApp installs with TLS, determines destination of requests to ExApps for HaProxy.
 
 ## Development
 
@@ -56,7 +66,7 @@ Deploy image(for `nextcloud-docker-dev`):
 
 ```shell
 docker run -e NC_HAPROXY_PASSWORD="some_secure_password" -v /var/run/docker.sock:/var/run/docker.sock \
---name aa-docker-socket-proxy -h aa-docker-socket-proxy --rm --net master_default --privileged -d aa-docker-socket-proxy:latest
+--name aa-docker-socket-proxy -h aa-docker-socket-proxy --net master_default --privileged -d aa-docker-socket-proxy:latest
 ```
 
 If you need create Self-Signed cert for tests:
