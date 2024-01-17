@@ -16,7 +16,7 @@ For those utilizing **Nextcloud AIO**, it's advised to employ the standard Nextc
 
 ```shell
 docker run -e NC_HAPROXY_PASSWORD="some_secure_password" -v /var/run/docker.sock:/var/run/docker.sock \
-  --name aa-docker-socket-proxy -h aa-docker-socket-proxy --rm --privileged -d ghcr.io/cloud-py-api/aa-docker-socket-proxy:release
+  --name aa-docker-socket-proxy -h aa-docker-socket-proxy --privileged -d ghcr.io/cloud-py-api/aa-docker-socket-proxy:release
 ```
 
 Instead of `some_secure_password` you put your password that later you should provide to AppAPI during Daemon creation.
@@ -26,7 +26,7 @@ Instead of `some_secure_password` you put your password that later you should pr
 ```shell
 docker run -e NC_HAPROXY_PASSWORD="some_secure_password" -v /var/run/docker.sock:/var/run/docker.sock \
   -v `pwd`/certs/cert.pem:/certs/cert.pem \
-  --name aa-docker-socket-proxy -h aa-docker-socket-proxy --rm --privileged -d ghcr.io/cloud-py-api/aa-docker-socket-proxy:release
+  --name aa-docker-socket-proxy -h aa-docker-socket-proxy --privileged -d ghcr.io/cloud-py-api/aa-docker-socket-proxy:release
 ```
 
 Here in addition to `some_secure_password` you should map certificate file from host with SSL certificates that will be used by HaProxy and ExApps.
@@ -56,7 +56,7 @@ Deploy image(for `nextcloud-docker-dev`):
 
 ```shell
 docker run -e NC_HAPROXY_PASSWORD="some_secure_password" -v /var/run/docker.sock:/var/run/docker.sock \
---name aa-docker-socket-proxy -h aa-docker-socket-proxy --rm --net master_default --privileged -d aa-docker-socket-proxy:latest
+--name aa-docker-socket-proxy -h aa-docker-socket-proxy --net master_default --privileged -d aa-docker-socket-proxy:latest
 ```
 
 If you need create Self-Signed cert for tests:
