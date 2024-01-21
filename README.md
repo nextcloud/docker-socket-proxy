@@ -78,3 +78,11 @@ openssl req -nodes -new -x509 -subj '/CN=*' -sha256 -keyout certs/privkey.pem -o
 ```shell
 cat certs/fullchain.pem certs/privkey.pem | tee certs/cert.pem > /dev/null 2>&1
 ```
+
+## Possible issues
+
+If you encounter AppAPI doesn't work with this Docker Socket Proxy configured - verify if you are not exceeded **error rate limits** that will ban any further requests for **60m**.
+
+> Solution: Restart aa-docker-socket-proxy container (to reset the haproxy stick-table)
+
+It might happen if you actively re-installing/re-enabling ExApps, as these processes have some requests that have to fail with error HTTP response from Docker Engine (e.g. inspect container), which will be counted in stick-table and lead to exceeding **error rate limitations** in our haproxy configuration.
