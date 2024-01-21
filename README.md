@@ -37,7 +37,7 @@ docker run -e NC_HAPROXY_PASSWORD="some_secure_password" \
   --restart unless-stopped --privileged -d ghcr.io/cloud-py-api/aa-docker-socket-proxy:release
 ```
 
-Here in addition to `some_secure_password` we map certificate file from host with SSL certificate that will be used by HaProxy.
+Here in addition we map certificate file from host with SSL certificate that will be used by HaProxy.
 
 > [!WARNING]
 > If the certificates are self-signed, your job is to add them to the Nextcloud instance so that AppAPI can recognize them.
@@ -50,7 +50,7 @@ Here in addition to `some_secure_password` we map certificate file from host wit
 
 ### Additionally supported variables
 
-`HAPROXY_PORT`: using of custom port instead of 2735 which is the default one.
+`HAPROXY_PORT`: using of custom port instead of **2375** which is the default one.
 
 `EX_APPS_NET`: only for custom remote ExApp installs with TLS, determines destination of requests to ExApps for HaProxy.
 
