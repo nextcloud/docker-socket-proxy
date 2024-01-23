@@ -3,7 +3,7 @@ FROM haproxy:2.9.2-alpine3.19
 USER root
 
 ENV HAPROXY_PORT 2375
-ENV EX_APPS_NET "localhost"
+ENV EX_APPS_NET_FOR_HTTPS "localhost"
 
 RUN set -ex; \
     apk add --no-cache \
@@ -21,4 +21,4 @@ COPY --chmod=664 haproxy_ex_apps.cfg /haproxy_ex_apps.cfg
 
 WORKDIR /
 ENTRYPOINT ["/bin/bash", "start.sh"]
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD /healthcheck.sh
+HEALTHCHECK --interval=10s --timeout=10s --retries=9 CMD /healthcheck.sh

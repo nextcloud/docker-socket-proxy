@@ -6,7 +6,7 @@ HAPROXYFILE="$(echo "$HAPROXYFILE" | sed "s|HAPROXY_PORT_PLACEHOLDER|$HAPROXY_PO
 
 if [ -f "/certs/cert.pem" ]; then
     HAPROXYFILE="$(echo "$HAPROXYFILE" | sed "s|BIND_DOCKER_PLACEHOLDER|bind *:$HAPROXY_PORT v4v6 ssl crt /certs/cert.pem|")"
-    sed -i "s|EX_APPS_NET_PLACEHOLDER|$EX_APPS_NET|" /haproxy_ex_apps.cfg
+    sed -i "s|EX_APPS_NET_FOR_HTTPS_PLACEHOLDER|$EX_APPS_NET_FOR_HTTPS|" /haproxy_ex_apps.cfg
     # Chmod certs to be accessible by haproxy
     chmod 644 /certs/cert.pem
 else
