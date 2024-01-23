@@ -38,6 +38,7 @@ docker run -e NC_HAPROXY_PASSWORD="some_secure_password" \
 ```
 
 Here in addition we map certificate file from host with SSL certificate that will be used by HaProxy and specify `host` network.
+
 *In this case ExApps will only map host's loopback adapter, and will be avalaible to Nextcloud only throw HaProxy.*
 
 > [!WARNING]
@@ -76,7 +77,7 @@ docker run -e NC_HAPROXY_PASSWORD="some_secure_password" \
 After that create daemon in AppAPI from the Docker Socket Proxy template, specifying:
 1. Host: `aa-docker-socket-proxy:2375`
 2. Network in Deploy Config equal to `master_default`
-3. HaProxy in Deploy Config password: `some_secure_password`
+3. Deploy Config: HaProxy password: `some_secure_password`
 
 ### HTTPS(remote)
 
@@ -116,4 +117,4 @@ docker run -e NC_HAPROXY_PASSWORD="some_secure_password" \
 After that create daemon in AppAPI from the Docker Socket Proxy template, with next parameters:
 1. Host: `host.docker.internal:2375`
 2. Tick `https` checkbox.
-3. HaProxy in Deploy Config password: `some_secure_password`
+3. Deploy Config: HaProxy password: `some_secure_password`
