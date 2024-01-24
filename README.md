@@ -29,32 +29,42 @@ Instead of `some_secure_password` you put your password that later you should pr
 
 ### Docker with TLS
 
+In this case ExApps will only map host's loopback adapter, and will be avalaible to Nextcloud only throw HaProxy.
+
 ```shell
 docker run -e NC_HAPROXY_PASSWORD="some_secure_password" \
+  -e BIND_ADDRESS="x.y.z.z"
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v `pwd`/certs/cert.pem:/certs/cert.pem \
-  --name aa-docker-socket-proxy -h aa-docker-socket-proxy \
+  --name aa-docker-socket-proxy -h aa-docker-socket-proxy --net host \
   --restart unless-stopped --privileged -d ghcr.io/cloud-py-api/aa-docker-socket-proxy:release
 ```
 
-Here in addition we map certificate file from host with SSL certificate that will be used by HaProxy.
+Here in addition we map certificate file from host with SSL certificate that will be used by HaProxy and specify to use the `host` network.
+
+You should set `BIND_ADDRESS` to the IP on which server with ExApps can accept requests coming from the Nextcloud instance.
+
+*This is necessary when using the “host” network so as not to occupy all interfaces, because ExApp will use loopback adapter.*
 
 > [!WARNING]
 > If the certificates are self-signed, your job is to add them to the Nextcloud instance so that AppAPI can recognize them.
 
 ### AppAPI
 
-1. Create a daemon from the `Docker Socket Proxy` or `Docker Socket Proxy Remote` template in AppAPI.
+1. Create a daemon from the `Docker Socket Proxy` template in AppAPI.
 2. Fill the password you used during container creation.
-3. If `Docker Socket Proxy Remote` is used you need to specify the IP/DNS of the created HaProxy.
 
 ### Additionally supported variables
 
 `HAPROXY_PORT`: using of custom port instead of **2375** which is the default one.
 
-`EX_APPS_NET`: only for custom remote ExApp installs with TLS, determines destination of requests to ExApps for HaProxy.
+`BIND_ADDRESS`: the address to use for port binding. (Usually needed only for remote installs, **must be accessible from the Nextcloud**)
+
+`EX_APPS_NET_FOR_HTTPS`: only for custom remote ExApp installs with TLS, determines destination of requests to ExApps for HaProxy.
 
 ## Development
+
+### HTTP(local)
 
 To build image locally use:
 
@@ -65,16 +75,54 @@ docker build -f ./Dockerfile -t aa-docker-socket-proxy:latest ./
 Deploy image(for `nextcloud-docker-dev`):
 
 ```shell
-docker run -e NC_HAPROXY_PASSWORD="some_secure_password" -v /var/run/docker.sock:/var/run/docker.sock \
---name aa-docker-socket-proxy -h aa-docker-socket-proxy --net master_default --privileged -d aa-docker-socket-proxy:latest
+docker run -e NC_HAPROXY_PASSWORD="some_secure_password" \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  --name aa-docker-socket-proxy -h aa-docker-socket-proxy --net master_default \
+  --privileged -d aa-docker-socket-proxy:latest
 ```
 
-If you need create Self-Signed cert for tests:
+After that create daemon in AppAPI from the Docker Socket Proxy template, specifying:
+1. Host: `aa-docker-socket-proxy:2375`
+2. Network in Deploy Config equal to `master_default`
+3. Deploy Config: HaProxy password: `some_secure_password`
+
+### HTTPS(remote)
+
+We will emulate remote deployment still with `nextcloud-docker-dev` setup.
+For this we deploy `aa-docker-socket-proxy` to host network and reach it using `host.docker.internal`.
+
+> [!NOTE]
+> Due to current Docker limitations, this setup type is not working on macOS.
+> Ref issue: [Support Host Network for macOS](https://github.com/docker/roadmap/issues/238)
+
+First create Self-Signed cert for tests:
 
 ```shell
-openssl req -nodes -new -x509 -subj '/CN=*' -sha256 -keyout certs/privkey.pem -out certs/fullchain.pem -days 365000 > /dev/null 2>&1
+openssl req -nodes -new -x509 -subj '/CN=host.docker.internal' -sha256 -keyout certs/privkey.pem -out certs/fullchain.pem -days 365000 > /dev/null 2>&1
 ```
 
 ```shell
 cat certs/fullchain.pem certs/privkey.pem | tee certs/cert.pem > /dev/null 2>&1
 ```
+
+Place `cert.pem` into `data/shared` folder of `nextcloud-docker-dev` and execute inside Nextcloud container:
+
+```shell
+sudo -u www-data php occ security:certificates:import /shared/cert.pem
+```
+
+Create HaProxy container:
+
+```shell
+docker run -e NC_HAPROXY_PASSWORD="some_secure_password" \
+  -e BIND_ADDRESS="172.17.0.1" \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v `pwd`/certs/cert.pem:/certs/cert.pem \
+  --name aa-docker-socket-proxy -h aa-docker-socket-proxy --net host \
+  --privileged -d aa-docker-socket-proxy:latest
+```
+
+After that create daemon in AppAPI from the Docker Socket Proxy template, with next parameters:
+1. Host: `host.docker.internal:2375`
+2. Tick `https` checkbox.
+3. Deploy Config: HaProxy password: `some_secure_password`
