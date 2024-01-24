@@ -29,17 +29,22 @@ Instead of `some_secure_password` you put your password that later you should pr
 
 ### Docker with TLS
 
+In this case ExApps will only map host's loopback adapter, and will be avalaible to Nextcloud only throw HaProxy.
+
 ```shell
 docker run -e NC_HAPROXY_PASSWORD="some_secure_password" \
+  -e BIND_ADDRESS="x.y.z.z"
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v `pwd`/certs/cert.pem:/certs/cert.pem \
   --name aa-docker-socket-proxy -h aa-docker-socket-proxy --net host \
   --restart unless-stopped --privileged -d ghcr.io/cloud-py-api/aa-docker-socket-proxy:release
 ```
 
-Here in addition we map certificate file from host with SSL certificate that will be used by HaProxy and specify `host` network.
+Here in addition we map certificate file from host with SSL certificate that will be used by HaProxy and specify to use the `host` network.
 
-*In this case ExApps will only map host's loopback adapter, and will be avalaible to Nextcloud only throw HaProxy.*
+You should set `BIND_ADDRESS` to the IP on which server with ExApps can accept requests coming from the Nextcloud instance.
+
+*This is necessary when using the “host” network so as not to occupy all interfaces, because ExApp will use loopback adapter.*
 
 > [!WARNING]
 > If the certificates are self-signed, your job is to add them to the Nextcloud instance so that AppAPI can recognize them.
@@ -52,6 +57,8 @@ Here in addition we map certificate file from host with SSL certificate that wil
 ### Additionally supported variables
 
 `HAPROXY_PORT`: using of custom port instead of **2375** which is the default one.
+
+`BIND_ADDRESS`: the address to use for port binding. (Usually needed only for remote installs, **must be accessible from the Nextcloud**)
 
 `EX_APPS_NET_FOR_HTTPS`: only for custom remote ExApp installs with TLS, determines destination of requests to ExApps for HaProxy.
 
@@ -108,6 +115,7 @@ Create HaProxy container:
 
 ```shell
 docker run -e NC_HAPROXY_PASSWORD="some_secure_password" \
+  -e BIND_ADDRESS="172.17.0.1" \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v `pwd`/certs/cert.pem:/certs/cert.pem \
   --name aa-docker-socket-proxy -h aa-docker-socket-proxy --net host \
