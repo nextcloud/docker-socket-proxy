@@ -126,3 +126,18 @@ After that create daemon in AppAPI from the Docker Socket Proxy template, with n
 1. Host: `host.docker.internal:2375`
 2. Tick `https` checkbox.
 3. Deploy Config: HaProxy password: `some_secure_password`
+
+## Known issues
+
+### IPv6 support
+
+> [!NOTE]
+> You need this only if IPv6 protocol is default on the remote machine with ExApps
+
+_Currently_, not all external applications support the IPv6 protocol, and most often they listen only on IPv4, 
+so in the case of using HTTPS when HaProxy forwards incoming connections, you should additionally 
+specify the EX_APPS_NET_FOR_HTTPS variable when creating the container:
+
+```shell
+  -e EX_APPS_NET_FOR_HTTPS="ipv4@localhost"
+```
