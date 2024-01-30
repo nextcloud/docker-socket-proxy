@@ -4,15 +4,15 @@ from os import environ
 
 
 def remove_haproxy():
-    run("docker container rm aa-docker-socket-proxy --force".split(), stderr=DEVNULL, stdout=DEVNULL, check=False)
+    run("docker container rm nextcloud_appapi_dsp --force".split(), stderr=DEVNULL, stdout=DEVNULL, check=False)
 
 
 def start_haproxy(port: int = 2375):
     tag = environ.get("TAG_SUFFIX", "latest")
     run(f"docker run -e NC_HAPROXY_PASSWORD='some_secure_password' -e HAPROXY_PORT={port} "
         "-v /var/run/docker.sock:/var/run/docker.sock "
-        f"--name aa-docker-socket-proxy -h aa-docker-socket-proxy -p {port}:{port} "
-        f"--rm --privileged -d aa-docker-socket-proxy:{tag}".split(),
+        f"--name nextcloud_appapi_dsp -h nextcloud_appapi_dsp -p {port}:{port} "
+        f"--rm --privileged -d nextcloud_appapi_dsp:{tag}".split(),
         stdout=DEVNULL,
         check=True)
 
@@ -20,7 +20,7 @@ def start_haproxy(port: int = 2375):
 def wait_heartbeat():
     for i in range(60):
         r = run(
-            ["docker", "inspect", "--format='{{json .State.Health.Status}}'", "aa-docker-socket-proxy"],
+            ["docker", "inspect", "--format='{{json .State.Health.Status}}'", "nextcloud_appapi_dsp"],
             capture_output=True, check=True, )
         r = r.stdout.decode("UTF-8")
         if r.find("healthy") != -1:
