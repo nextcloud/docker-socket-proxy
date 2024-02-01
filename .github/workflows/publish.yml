@@ -29,9 +29,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
-          key: aa-docker-socket-proxy-buildx-${{ github.sha }}
+          key: nextcloud-appapi-dsp-buildx-${{ github.sha }}
           restore-keys: |
-            aa-docker-socket-proxy-buildx-
+            nextcloud-appapi-dsp-buildx-
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -50,7 +50,7 @@ jobs:
           context: .
           platforms: linux/amd64
           file: Dockerfile
-          tags: aa-docker-socket-proxy:${{ github.sha }}
+          tags: nextcloud-appapi-dsp:${{ github.sha }}
           load: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
@@ -75,8 +75,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           file: Dockerfile
           tags: |
-            ghcr.io/cloud-py-api/aa-docker-socket-proxy:${{ github.event_name == 'release' && 'release' || 'latest' }}
-            ghcr.io/cloud-py-api/aa-docker-socket-proxy:${{ github.ref_name }}
+            ghcr.io/cloud-py-api/nextcloud-appapi-dsp:${{ github.event_name == 'release' && 'release' || 'latest' }}
+            ghcr.io/cloud-py-api/nextcloud-appapi-dsp:${{ github.ref_name }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
       - name: Move cache

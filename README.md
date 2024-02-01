@@ -21,8 +21,8 @@ We highly recommend to use it **in all cases**, except for **Nextcloud AIO**, in
 ```shell
 docker run -e NC_HAPROXY_PASSWORD="some_secure_password" \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  --name aa-docker-socket-proxy -h aa-docker-socket-proxy \
-  --restart unless-stopped --privileged -d ghcr.io/cloud-py-api/aa-docker-socket-proxy:release
+  --name nextcloud-appapi-dsp -h nextcloud-appapi-dsp \
+  --restart unless-stopped --privileged -d ghcr.io/cloud-py-api/nextcloud-appapi-dsp:release
 ```
 
 Instead of `some_secure_password` you put your password that later you should provide to AppAPI during Daemon creation.
@@ -36,8 +36,8 @@ docker run -e NC_HAPROXY_PASSWORD="some_secure_password" \
   -e BIND_ADDRESS="x.y.z.z"
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v `pwd`/certs/cert.pem:/certs/cert.pem \
-  --name aa-docker-socket-proxy -h aa-docker-socket-proxy --net host \
-  --restart unless-stopped --privileged -d ghcr.io/cloud-py-api/aa-docker-socket-proxy:release
+  --name nextcloud-appapi-dsp -h nextcloud-appapi-dsp --net host \
+  --restart unless-stopped --privileged -d ghcr.io/cloud-py-api/nextcloud-appapi-dsp:release
 ```
 
 Here in addition we map certificate file from host with SSL certificate that will be used by HaProxy and specify to use the `host` network.
@@ -69,7 +69,7 @@ You should set `BIND_ADDRESS` to the IP on which server with ExApps can accept r
 To build image locally use:
 
 ```shell
-docker build -f ./Dockerfile -t aa-docker-socket-proxy:latest ./
+docker build -f ./Dockerfile -t nextcloud-appapi-dsp:latest ./
 ```
 
 Deploy image(for `nextcloud-docker-dev`):
@@ -77,19 +77,19 @@ Deploy image(for `nextcloud-docker-dev`):
 ```shell
 docker run -e NC_HAPROXY_PASSWORD="some_secure_password" \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  --name aa-docker-socket-proxy -h aa-docker-socket-proxy --net master_default \
-  --privileged -d aa-docker-socket-proxy:latest
+  --name nextcloud-appapi-dsp -h nextcloud-appapi-dsp --net master_default \
+  --privileged -d nextcloud-appapi-dsp:latest
 ```
 
 After that create daemon in AppAPI from the Docker Socket Proxy template, specifying:
-1. Host: `aa-docker-socket-proxy:2375`
+1. Host: `nextcloud-appapi-dsp:2375`
 2. Network in Deploy Config equal to `master_default`
 3. Deploy Config: HaProxy password: `some_secure_password`
 
 ### HTTPS(remote)
 
 We will emulate remote deployment still with `nextcloud-docker-dev` setup.
-For this we deploy `aa-docker-socket-proxy` to host network and reach it using `host.docker.internal`.
+For this we deploy `nextcloud-appapi-dsp` to host network and reach it using `host.docker.internal`.
 
 > [!NOTE]
 > Due to current Docker limitations, this setup type is not working on macOS.
@@ -118,8 +118,8 @@ docker run -e NC_HAPROXY_PASSWORD="some_secure_password" \
   -e BIND_ADDRESS="172.17.0.1" \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v `pwd`/certs/cert.pem:/certs/cert.pem \
-  --name aa-docker-socket-proxy -h aa-docker-socket-proxy --net host \
-  --privileged -d aa-docker-socket-proxy:latest
+  --name nextcloud-appapi-dsp -h nextcloud-appapi-dsp --net host \
+  --privileged -d nextcloud-appapi-dsp:latest
 ```
 
 After that create daemon in AppAPI from the Docker Socket Proxy template, with next parameters:
