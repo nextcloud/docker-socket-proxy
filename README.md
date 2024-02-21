@@ -27,6 +27,9 @@ docker run -e NC_HAPROXY_PASSWORD="some_secure_password" \
 
 Instead of `some_secure_password` you put your password that later you should provide to AppAPI during Daemon creation.
 
+> [!NOTE]
+> Usually the **bridge** networks types in Docker are trusted networks.
+
 ### Docker with TLS
 
 In this case ExApps will only map host's loopback adapter, and will be avalaible to Nextcloud only throw HaProxy.
