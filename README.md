@@ -64,6 +64,10 @@ You should set `BIND_ADDRESS` to the IP on which server with ExApps can accept r
 `BIND_ADDRESS`: the address to use for port binding. (Usually needed only for remote installs, **must be accessible from the Nextcloud**)
 
 `EX_APPS_NET_FOR_HTTPS`: only for custom remote ExApp installs with TLS, determines destination of requests to ExApps for HaProxy.
+    Default:`localhost`
+
+`EX_APPS_COUNT`: only for remote ExApp installs with TLS, determines amount of  ports HaProxy will open to proxy requests to ExApps.
+    Default:`50`
 
 ## Development
 
