@@ -4,7 +4,8 @@ USER root
 
 ENV HAPROXY_PORT 2375
 ENV BIND_ADDRESS *
-ENV EX_APPS_NET_FOR_HTTPS "localhost"
+ENV EX_APPS_NET "localhost"
+ENV EX_APPS_COUNT 50
 
 RUN set -ex; \
     apk add --no-cache \

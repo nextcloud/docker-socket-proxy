@@ -63,7 +63,11 @@ You should set `BIND_ADDRESS` to the IP on which server with ExApps can accept r
 
 `BIND_ADDRESS`: the address to use for port binding. (Usually needed only for remote installs, **must be accessible from the Nextcloud**)
 
-`EX_APPS_NET_FOR_HTTPS`: only for custom remote ExApp installs with TLS, determines destination of requests to ExApps for HaProxy.
+#### Only for ExApp installs with TLS:
+
+* `EX_APPS_NET`: determines destination of requests to ExApps for HaProxy. Default:`localhost`
+
+* `EX_APPS_COUNT`: determines amount of ports HaProxy will open to proxy requests to ExApps. Default:`50`
 
 ## Development
 
@@ -139,8 +143,8 @@ After that create daemon in AppAPI from the Docker Socket Proxy template, with n
 
 _Currently_, not all external applications support the IPv6 protocol, and most often they listen only on IPv4, 
 so in the case of using HTTPS when HaProxy forwards incoming connections, you should additionally 
-specify the EX_APPS_NET_FOR_HTTPS variable when creating the container:
+specify the EX_APPS_NET variable when creating the container:
 
 ```shell
-  -e EX_APPS_NET_FOR_HTTPS="ipv4@localhost"
+  -e EX_APPS_NET="ipv4@localhost"
 ```
