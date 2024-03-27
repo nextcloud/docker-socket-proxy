@@ -6,6 +6,9 @@ ENV HAPROXY_PORT 2375
 ENV BIND_ADDRESS *
 ENV EX_APPS_NET "localhost"
 ENV EX_APPS_COUNT 50
+ENV TIMEOUT_CONNECT "10s"
+ENV TIMEOUT_CLIENT  "30s"
+ENV TIMEOUT_SERVER  "30s"
 
 RUN set -ex; \
     apk add --no-cache \
@@ -14,7 +17,8 @@ RUN set -ex; \
         bash \
         curl \
         openssl \
-        bind-tools; \
+        bind-tools \
+        nano; \
     chmod -R 777 /tmp
 
 COPY --chmod=775 *.sh /

@@ -63,6 +63,12 @@ You should set `BIND_ADDRESS` to the IP on which server with ExApps can accept r
 
 `BIND_ADDRESS`: the address to use for port binding. (Usually needed only for remote installs, **must be accessible from the Nextcloud**)
 
+`TIMEOUT_CONNECT`: timeout for connecting to ExApp, default: **10s**
+
+`TIMEOUT_CLIENT`: timeout for NC to start sending request data to the ExApp, default: **30s**
+
+`TIMEOUT_SERVER`: timeout for ExApp to start responding to NC request, default: **30s**
+
 #### Only for ExApp installs with TLS:
 
 * `EX_APPS_NET`: determines destination of requests to ExApps for HaProxy. Default:`localhost`
@@ -147,4 +153,17 @@ specify the EX_APPS_NET variable when creating the container:
 
 ```shell
   -e EX_APPS_NET="ipv4@localhost"
+```
+
+### Slow responding ExApps
+
+Some AI applications may respond **longer** than the standard 30 seconds timeout defined in the `HaProxy` config.
+
+An example of such an application: `context_chat`
+
+For the successful operation of such applications, 
+you can set custom config values through the environment variable during the creation of the DSP container with:
+
+```shell
+  -e TIMEOUT_SERVER="1800s"
 ```

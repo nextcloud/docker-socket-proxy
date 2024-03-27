@@ -1,6 +1,9 @@
 #!/bin/sh
 
 sed -i "s|NC_PASSWORD_PLACEHOLDER|$NC_HAPROXY_PASSWORD|" /haproxy.cfg
+sed -i "s|TIMEOUT_CONNECT|$TIMEOUT_CONNECT|" /haproxy.cfg
+sed -i "s|TIMEOUT_CLIENT|$TIMEOUT_CLIENT|" /haproxy.cfg
+sed -i "s|TIMEOUT_SERVER|$TIMEOUT_SERVER|" /haproxy.cfg
 
 if [ -f "/certs/cert.pem" ]; then
     EX_APPS_COUNT_PADDED=$(printf "%03d" "$EX_APPS_COUNT")

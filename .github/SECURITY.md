@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-Only the latest non beta release version of `app_api` are currently being supported with security updates.
+Only the latest non beta release version of `docker-socket-proxy` are currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
