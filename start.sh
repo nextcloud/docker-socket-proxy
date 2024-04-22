@@ -26,3 +26,5 @@ else
   cat /haproxy.cfg
   haproxy -f /haproxy.cfg -db
 fi
+echo "HaProxy quit unexpectedly"
+exit 1
