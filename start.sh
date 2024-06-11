@@ -1,5 +1,15 @@
 #!/bin/sh
 
+# Check if both NC_HAPROXY_PASSWORD and NC_HAPROXY_PASSWORD_FILE are specified
+if [ -n "$NC_HAPROXY_PASSWORD" ] && [ -f "$NC_HAPROXY_PASSWORD_FILE" ]; then
+  echo "Error: Both NC_HAPROXY_PASSWORD and NC_HAPROXY_PASSWORD_FILE are specified. Please specify only one."
+  exit 1
+fi
+
+if [ -f "$NC_HAPROXY_PASSWORD_FILE" ]; then
+  NC_HAPROXY_PASSWORD=$(cat "$NC_HAPROXY_PASSWORD_FILE")
+fi
+
 sed -i "s|NC_PASSWORD_PLACEHOLDER|$NC_HAPROXY_PASSWORD|" /haproxy.cfg
 sed -i "s|TIMEOUT_CONNECT|$TIMEOUT_CONNECT|" /haproxy.cfg
 sed -i "s|TIMEOUT_CLIENT|$TIMEOUT_CLIENT|" /haproxy.cfg
