@@ -9,12 +9,16 @@ def remove_haproxy():
 
 def start_haproxy(port: int = 2375):
     tag = environ.get("TAG_SUFFIX", "latest")
-    run(f"docker run -e NC_HAPROXY_PASSWORD='some_secure_password' -e HAPROXY_PORT={port} "
-        "-v /var/run/docker.sock:/var/run/docker.sock "
-        f"--name nextcloud-appapi-dsp -h nextcloud-appapi-dsp -p {port}:{port} "
-        f"--rm --privileged -d nextcloud-appapi-dsp:{tag}".split(),
+    run(
+        [
+            "docker", "run", "-e", "NC_HAPROXY_PASSWORD=some secure password", "-e",
+            f"HAPROXY_PORT={port}", "-v", "/var/run/docker.sock:/var/run/docker.sock",
+            "--name", "nextcloud-appapi-dsp", "-h", "nextcloud-appapi-dsp", "-p", f"{port}:{port}",
+            "--rm", "--privileged", "-d", f"nextcloud-appapi-dsp:{tag}"
+        ],
         stdout=DEVNULL,
-        check=True)
+        check=True,
+    )
 
 
 def wait_heartbeat():
