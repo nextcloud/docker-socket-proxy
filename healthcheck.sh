@@ -3,5 +3,7 @@
 if [ "$BIND_ADDRESS" != "*" ]; then
 	nc -z "$BIND_ADDRESS" "$HAPROXY_PORT" || exit 1
 else
-	nc -z localhost "$HAPROXY_PORT" || exit 1
+  if ! nc -z "127.0.0.1" "$HAPROXY_PORT" && ! nc -z "::1" "$HAPROXY_PORT"; then
+    exit 1
+  fi
 fi
