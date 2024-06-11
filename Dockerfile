@@ -19,12 +19,13 @@ RUN set -ex; \
         openssl \
         bind-tools \
         nano \
-        vim; \
+        vim \
+        envsubst; \
     chmod -R 777 /tmp
 
 COPY --chmod=775 *.sh /
-COPY --chmod=664 haproxy.cfg /haproxy.cfg
-COPY --chmod=664 haproxy_ex_apps.cfg /haproxy_ex_apps.cfg
+COPY --chmod=664 haproxy.cfg.template /haproxy.cfg.template
+COPY --chmod=664 haproxy_ex_apps.cfg.template /haproxy_ex_apps.cfg.template
 
 WORKDIR /
 ENTRYPOINT ["/bin/bash", "start.sh"]

@@ -75,7 +75,6 @@ You should set `BIND_ADDRESS` to the IP on which server with ExApps can accept r
 > This file should be mounted into the container, and the password will be read from this file.
 > If both NC_HAPROXY_PASSWORD and NC_HAPROXY_PASSWORD_FILE are specified, the container will exit with an error.
 
-
 #### Only for ExApp installs with TLS:
 
 * `EX_APPS_NET`: determines destination of requests to ExApps for HaProxy. Default:`localhost`

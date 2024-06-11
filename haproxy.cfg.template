@@ -9,12 +9,12 @@ defaults
     log global
     option httplog
     option dontlognull
-    timeout connect TIMEOUT_CONNECT
-    timeout client TIMEOUT_CLIENT
-    timeout server TIMEOUT_SERVER
+    timeout connect ${TIMEOUT_CONNECT}
+    timeout client ${TIMEOUT_CLIENT}
+    timeout server ${TIMEOUT_SERVER}
 
 userlist app_api_credentials
-    user app_api_haproxy_user insecure-password "NC_PASSWORD_PLACEHOLDER"
+    user app_api_haproxy_user password ${NC_HAPROXY_PASSWORD}
 
 frontend docker_engine
     mode http
