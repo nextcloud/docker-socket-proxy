@@ -15,9 +15,17 @@ if [ ! -f "/haproxy.cfg" ]; then
   fi
 
   if [ -n "$NC_HAPROXY_PASSWORD_FILE" ]; then
-    NC_HAPROXY_PASSWORD=$(mkpasswd -m sha-256 < "$NC_HAPROXY_PASSWORD_FILE")
-  else
+    if [ -s "$NC_HAPROXY_PASSWORD_FILE" ]; then
+      NC_HAPROXY_PASSWORD=$(mkpasswd -m sha-256 < "$NC_HAPROXY_PASSWORD_FILE")
+    else
+      echo "Error: NC_HAPROXY_PASSWORD_FILE is specified but is empty."
+      exit 1
+    fi
+  elif [ -n "$NC_HAPROXY_PASSWORD" ]; then
     NC_HAPROXY_PASSWORD=$(echo "$NC_HAPROXY_PASSWORD" | mkpasswd -m sha-256)
+  else
+    echo "Error: Either NC_HAPROXY_PASSWORD_FILE or NC_HAPROXY_PASSWORD must be set and contain a password."
+    exit 1
   fi
 
   export NC_HAPROXY_PASSWORD
@@ -26,14 +34,14 @@ if [ ! -f "/haproxy.cfg" ]; then
   envsubst < /haproxy_ex_apps.cfg.template > /haproxy_ex_apps.cfg
 
   if [ -f "/certs/cert.pem" ]; then
-      EX_APPS_COUNT_PADDED=$(printf "%03d" "$EX_APPS_COUNT")
-      sed -i "s|BIND_ADDRESS_PLACEHOLDER|bind $BIND_ADDRESS:$HAPROXY_PORT v4v6 ssl crt /certs/cert.pem|" /haproxy.cfg
-      sed -i "s|BIND_ADDRESS_PLACEHOLDER|bind $BIND_ADDRESS:23000-23$EX_APPS_COUNT_PADDED v4v6 ssl crt /certs/cert.pem|" /haproxy_ex_apps.cfg
-      sed -i "s|EX_APPS_NET_PLACEHOLDER|$EX_APPS_NET|" /haproxy_ex_apps.cfg
-      # Chmod certs to be accessible by haproxy
-      chmod 644 /certs/cert.pem
+    EX_APPS_COUNT_PADDED=$(printf "%03d" "$EX_APPS_COUNT")
+    sed -i "s|BIND_ADDRESS_PLACEHOLDER|bind $BIND_ADDRESS:$HAPROXY_PORT v4v6 ssl crt /certs/cert.pem|" /haproxy.cfg
+    sed -i "s|BIND_ADDRESS_PLACEHOLDER|bind $BIND_ADDRESS:23000-23$EX_APPS_COUNT_PADDED v4v6 ssl crt /certs/cert.pem|" /haproxy_ex_apps.cfg
+    sed -i "s|EX_APPS_NET_PLACEHOLDER|$EX_APPS_NET|" /haproxy_ex_apps.cfg
+    # Chmod certs to be accessible by haproxy
+    chmod 644 /certs/cert.pem
   else
-      sed -i "s|BIND_ADDRESS_PLACEHOLDER|bind $BIND_ADDRESS:$HAPROXY_PORT v4v6|" /haproxy.cfg
+    sed -i "s|BIND_ADDRESS_PLACEHOLDER|bind $BIND_ADDRESS:$HAPROXY_PORT v4v6|" /haproxy.cfg
   fi
 else
   echo "HaProxy config already present."
@@ -49,5 +57,6 @@ else
   cat /haproxy.cfg
   haproxy -f /haproxy.cfg -db
 fi
+
 echo "HaProxy quit unexpectedly"
 exit 1
