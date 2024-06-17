@@ -81,6 +81,17 @@ You should set `BIND_ADDRESS` to the IP on which server with ExApps can accept r
 
 * `EX_APPS_COUNT`: determines amount of ports HaProxy will open to proxy requests to ExApps. Default:`50`
 
+### Example when operated on a different host
+
+when the docker-socket-proxy is installed on a different host than Nextcloud, the following settings can be used with the TLS configuration.
+Ensure that the firewall is opened for the ports 2375, 23000-230xx (see `EX_APPS_COUNT`)
+
+`-e BIND_ADDRESS="xxx.xxx.xxx.xx"` this needs to be the public ip of the host
+
+`-e EX_APPS_NET="ipv4@127.0.0.1"` required for the HaProxy to reach the sub containers
+
+`--net: host`
+
 ## Development
 
 ### HTTP(local)
