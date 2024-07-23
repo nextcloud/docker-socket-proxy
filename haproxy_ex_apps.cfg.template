@@ -19,6 +19,9 @@ frontend ex_apps
 
     http-request auth realm AppAPI unless valid_credentials
 
+    # Replace the Authorization header if there is X-Original-Authorization header of the original request
+    http-request set-header Authorization %[req.hdr(X-Original-Authorization)] if { req.hdr(X-Original-Authorization) -m found }
+
     # We allow anything for ExApps
     http-request allow
     use_backend bk_ex_apps
