@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
-# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-License-Identifier: AGPL-3.0-or-later
 
 if [ "$BIND_ADDRESS" != "*" ]; then
 	nc -z "$BIND_ADDRESS" "$HAPROXY_PORT" || exit 1
