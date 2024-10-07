@@ -12,7 +12,7 @@ on:
 jobs:
   push_to_registry:
     name: Build image
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: github.repository == 'nextcloud/docker-socket-proxy'
     permissions:
       packages: write
