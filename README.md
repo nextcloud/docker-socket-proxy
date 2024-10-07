@@ -1,3 +1,8 @@
+<!--
+ - SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
+ - SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Nextcloud AppAPI Docker Socket Proxy
 
 This is a **Security-Enhanced** proxy for the Docker Socket *specifically* for AppAPI.

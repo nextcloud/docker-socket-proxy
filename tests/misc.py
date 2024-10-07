@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from subprocess import run, DEVNULL
 import time
 from os import environ
