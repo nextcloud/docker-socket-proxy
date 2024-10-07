@@ -13,7 +13,7 @@ jobs:
   push_to_registry:
     name: Build image
     runs-on: ubuntu-latest
-    if: github.repository == 'cloud-py-api/docker-socket-proxy'
+    if: github.repository == 'nextcloud/docker-socket-proxy'
     permissions:
       packages: write
       contents: read
@@ -75,8 +75,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           file: Dockerfile
           tags: |
-            ghcr.io/cloud-py-api/nextcloud-appapi-dsp:${{ github.event_name == 'release' && 'release' || 'latest' }}
-            ghcr.io/cloud-py-api/nextcloud-appapi-dsp:${{ github.ref_name }}
+            ghcr.io/nextcloud/nextcloud-appapi-dsp:${{ github.event_name == 'release' && 'release' || 'latest' }}
+            ghcr.io/nextcloud/nextcloud-appapi-dsp:${{ github.ref_name }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
       - name: Move cache
