@@ -27,7 +27,7 @@ We highly recommend to use it **in all cases**, except for **Nextcloud AIO**, in
 docker run -e NC_HAPROXY_PASSWORD="some_secure_password" \
   -v /var/run/docker.sock:/var/run/docker.sock \
   --name nextcloud-appapi-dsp -h nextcloud-appapi-dsp \
-  --restart unless-stopped --privileged -d ghcr.io/cloud-py-api/nextcloud-appapi-dsp:release
+  --restart unless-stopped --privileged -d ghcr.io/nextcloud/nextcloud-appapi-dsp:release
 ```
 
 Instead of `some_secure_password` you put your password that later you should provide to AppAPI during Daemon creation.
@@ -45,7 +45,7 @@ docker run -e NC_HAPROXY_PASSWORD="some_secure_password" \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v `pwd`/certs/cert.pem:/certs/cert.pem \
   --name nextcloud-appapi-dsp -h nextcloud-appapi-dsp --net host \
-  --restart unless-stopped --privileged -d ghcr.io/cloud-py-api/nextcloud-appapi-dsp:release
+  --restart unless-stopped --privileged -d ghcr.io/nextcloud/nextcloud-appapi-dsp:release
 ```
 
 Here in addition we map certificate file from host with SSL certificate that will be used by HaProxy and specify to use the `host` network.
