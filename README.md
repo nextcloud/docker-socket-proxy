@@ -69,11 +69,11 @@ You should set `BIND_ADDRESS` to the IP on which server with ExApps can accept r
 
 `BIND_ADDRESS`: the address to use for port binding. (Usually needed only for remote installs, **must be accessible from the Nextcloud**)
 
-`TIMEOUT_CONNECT`: timeout for connecting to ExApp, default: **10s**
+`TIMEOUT_CONNECT`: timeout for connecting to ExApp, default: **30s**
 
 `TIMEOUT_CLIENT`: timeout for NC to start sending request data to the ExApp, default: **30s**
 
-`TIMEOUT_SERVER`: timeout for ExApp to start responding to NC request, default: **30s**
+`TIMEOUT_SERVER`: timeout for ExApp to start responding to NC request, default: **1800s**
 
 `NC_HAPROXY_PASSWORD_FILE`: Specifies path to a file containing the password for HAProxy. 
 
@@ -85,7 +85,7 @@ You should set `BIND_ADDRESS` to the IP on which server with ExApps can accept r
 
 * `EX_APPS_NET`: determines destination of requests to ExApps for HaProxy. Default:`localhost`
 
-* `EX_APPS_COUNT`: determines amount of ports HaProxy will open to proxy requests to ExApps. Default:`50`
+* `EX_APPS_COUNT`: determines amount of ports HaProxy will open to proxy requests to ExApps. Default:`30`
 
 ### Example when operated on a different host
 
