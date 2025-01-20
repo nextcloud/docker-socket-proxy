@@ -44,7 +44,7 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
 
       - name: Build container image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           push: false
           context: .
@@ -67,7 +67,7 @@ jobs:
           TAG_SUFFIX: ${{ github.sha }}
 
       - name: Publish container image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         if: github.ref == 'refs/heads/main' || github.event_name == 'release'
         with:
           push: true
