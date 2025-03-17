@@ -75,6 +75,8 @@ You should set `BIND_ADDRESS` to the IP on which server with ExApps can accept r
 
 `TIMEOUT_SERVER`: timeout for ExApp to start responding to NC request, default: **1800s**
 
+`NC_AUTOSTART_CONTAINERS`: if set, automatically start managed app containers (useful for Podman users)
+
 `NC_HAPROXY_PASSWORD_FILE`: Specifies path to a file containing the password for HAProxy. 
 
 > [!NOTE]
