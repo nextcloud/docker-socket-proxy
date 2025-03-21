@@ -52,12 +52,21 @@ fi
 
 echo "HaProxy config:"
 
+start_app_containers() {
+  if ! [ -z ${NC_AUTOSTART_CONTAINERS+x} ]; then
+    echo "Autostarting existing app containers per NC_AUTOSTART_CONTAINERS."
+    curl --silent --globoff -XGET --unix-socket /run/docker.sock 'http://localhost/containers/json?filters={"status":["exited"]}' | jq -r '.[] | select(.Names[0] | startswith("/nc_app_")) | .Id' | xargs -I% curl --silent --globoff -XPOST --fail-with-body --unix-socket /run/docker.sock 'http://localhost/containers/%/start'
+  fi
+}
+
 if [ -f "/certs/cert.pem" ]; then
   cat /haproxy.cfg
   cat /haproxy_ex_apps.cfg
+  start_app_containers
   haproxy -f /haproxy.cfg -f /haproxy_ex_apps.cfg -db
 else
   cat /haproxy.cfg
+  start_app_containers
   haproxy -f /haproxy.cfg -db
 fi
 

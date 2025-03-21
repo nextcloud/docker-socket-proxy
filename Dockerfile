@@ -23,7 +23,8 @@ RUN set -ex; \
         bind-tools \
         nano \
         vim \
-        envsubst; \
+        envsubst \
+        jq; \
     chmod -R 777 /tmp
 
 COPY --chmod=775 *.sh /
